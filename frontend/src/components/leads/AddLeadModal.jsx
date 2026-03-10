@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from 'lucide-react'
-import { addLeadSchema, Field, LeadInput, LeadSelect, STYLE_OPTIONS, BUDGET_OPTIONS } from './leadConstants.jsx'
+import { addLeadSchema, STYLE_OPTIONS, BUDGET_OPTIONS } from './leadConstants'
+import { Field, LeadInput, LeadSelect } from './leadConstantsUI'
 
 export default function AddLeadModal({ onClose, onSuccess }) {
   const { register, handleSubmit, formState: { errors, isSubmitting } } =

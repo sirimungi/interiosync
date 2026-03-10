@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, Mail, Phone, Palette, Wallet, MessageSquare, UserPlus, CheckCircle } from 'lucide-react'
-import { StatusBadge, STATUS_META, STATUS_OPTIONS } from './leadConstants.jsx'
+import { STATUS_META, STATUS_OPTIONS } from './leadConstants'
+import { StatusBadge } from './leadConstantsUI'
 
 export default function LeadDetailPanel({ lead, onClose, onUpdateStatus, onConvert }) {
   const [editingNotes, setEditingNotes] = useState(false)
