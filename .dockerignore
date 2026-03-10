@@ -1,0 +1,22 @@
+# Dependencies and build artifacts (rebuilt inside image)
+node_modules/
+frontend/node_modules/
+frontend/dist/
+backend/venv/
+backend/.venv/
+**/__pycache__/
+*.pyc
+.venv/
+env/
+
+# Git and IDE
+.git/
+.gitignore
+.idea/
+.vscode/
+*.log
+.DS_Store
+
+# Not needed in image
+docs/
+terminals/
