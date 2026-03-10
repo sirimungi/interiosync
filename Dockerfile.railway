@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Dockerfile.railway — single-image build for Railway deployment
+#
+#  Stage 1: Build the React frontend (Node 20)
+#  Stage 2: Python backend that serves both the API and the built frontend
+#
+#  The directory layout inside the container mirrors the local repo so that
+#  main.py's relative path "../../frontend/dist" resolves correctly:
+#    /app/backend/app/main.py  →  ../../frontend/dist  →  /app/frontend/dist ✓
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Stage 1: build React ──────────────────────────────────────────────────────
+FROM node:20-slim AS frontend-builder
+
+WORKDIR /build/frontend
+
+COPY frontend/package*.json ./
+RUN npm ci --prefer-offline --silent
+
+COPY frontend/ ./
+
+# VITE_API_URL='' → all API calls use relative URLs (same origin as the server)
+ENV VITE_API_URL=
+RUN npm run build
+
+# ── Stage 2: Python API + built frontend ──────────────────────────────────────
+FROM python:3.11-slim
+
+# Mirror local repo layout so existing relative paths work unchanged:
+#   /app/backend/   ← FastAPI code
+#   /app/frontend/  ← built React app
+WORKDIR /app
+
+# Install Python dependencies first (cache layer)
+COPY backend/requirements.txt backend/
+RUN pip install --no-cache-dir -r backend/requirements.txt
+
+# Copy backend source
+COPY backend/ backend/
+
+# Copy the built frontend into the expected location
+COPY --from=frontend-builder /build/frontend/dist frontend/dist
+
+# Make the startup script executable
+RUN chmod +x backend/entrypoint.railway.sh
+
+# Railway injects PORT; default to 8000 for local testing
+ENV PYTHONPATH=/app/backend
+EXPOSE 8000
+
+WORKDIR /app/backend
+ENTRYPOINT ["./entrypoint.railway.sh"]
