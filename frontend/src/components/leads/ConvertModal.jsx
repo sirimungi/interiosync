@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { X, CheckCircle, Copy, ArrowRight, AlertCircle, UserPlus } from 'lucide-react'
 import { convertLead } from '../../api'
-import { convertSchema, Field, LeadInput } from './leadConstants'
+import { convertSchema, Field, LeadInput } from './leadConstants.jsx'
 
 export default function ConvertModal({ lead, onClose, onConverted }) {
   const [result, setResult] = useState(null)
